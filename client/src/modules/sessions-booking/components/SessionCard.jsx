@@ -551,6 +551,8 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
         </div>
       )}
 
+      {/* Implement */}
+
       {activePanel === 'chat' && (
         <div className="border-t border-slate-100 px-5 py-4 bg-slate-50">
           <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
