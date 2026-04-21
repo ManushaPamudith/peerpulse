@@ -102,7 +102,7 @@ export default function ReviewCard({ review, currentUserId, onFlag, flaggedByMe 
             </div>
             <div className="flex flex-col items-end gap-0.5 shrink-0">
               <StarDisplay rating={review.rating} size={4} />
-              <span className="text-xs font-bold text-amber-500">Rating: {review.rating}/5</span>
+              <span className="text-xs font-bold text-amber-500">Rating: {review.rating} out of 5</span>
             </div>
           </div>
         </div>
