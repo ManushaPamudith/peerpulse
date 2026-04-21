@@ -124,8 +124,13 @@ export default function FeedbackPage() {
   }, [receivedReviews, sortBy, filterRating]);
 
   const handleFlag = async (reviewId, reason) => {
-    await api.post(`/reviews/${reviewId}/flag`, { reason });
-    setFlaggedReviewIds(prev => new Set([...prev, String(reviewId)]));
+    try {
+      await api.post(`/reviews/${reviewId}/flag`, { reason });
+      setFlaggedReviewIds(prev => new Set([...prev, String(reviewId)]));
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err?.message || 'Failed to flag review. Please try again.';
+      throw new Error(errorMsg);
+    }
   };
 
   return (

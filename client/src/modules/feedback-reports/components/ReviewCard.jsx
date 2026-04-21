@@ -74,7 +74,8 @@ export default function ReviewCard({ review, currentUserId, onFlag, flaggedByMe 
       setShowFlagUI(false);
       setFlagReason('');
     } catch (err) {
-      setFlagError(err?.message || 'Something went wrong. Please try again.');
+      const errorMsg = err.response?.data?.message || err?.message || 'Failed to flag review. Please try again.';
+      setFlagError(errorMsg);
     }
   }
 
