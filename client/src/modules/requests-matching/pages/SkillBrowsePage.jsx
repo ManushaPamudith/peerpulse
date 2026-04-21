@@ -694,7 +694,8 @@ export default function SkillBrowsePage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Level</label>
+                  {/* Quick filters for narrowing visible skills. */}
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Filter by Level</label>
                   <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     value={level} onChange={e => setLevel(e.target.value)}>
                     {LEVELS.map(l => <option key={l}>{l}</option>)}
@@ -708,7 +709,7 @@ export default function SkillBrowsePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Sort</label>
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Sort Results</label>
                   <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     value={sortBy} onChange={e => setSortBy(e.target.value)}>
                     {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -725,7 +726,7 @@ export default function SkillBrowsePage() {
                   {(search || level !== 'All' || type !== 'All' || !verifiedOnly || sortBy !== 'match') && (
                     <button onClick={() => { setSearch(''); setLevel('All'); setType('All'); setVerifiedOnly(true); setSortBy('match'); }}
                       className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors mr-2">
-                      Reset filters
+                      Clear Filters
                     </button>
                   )}
                 </div>
@@ -745,7 +746,7 @@ export default function SkillBrowsePage() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-20 text-slate-400">
                 <div className="text-4xl mb-3">🔍</div>
-                <p className="text-sm font-medium">No skills matched your filters.</p>
+                <p className="text-sm font-medium">No skills found for the selected filters.</p>
                 <p className="text-xs mt-1">Try a broader keyword or reset the filters above.</p>
               </div>
             ) : (
