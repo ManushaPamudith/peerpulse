@@ -182,7 +182,7 @@ export default function HomePage() {
               </span>
 
               <h1 className="anim-hero-2 text-5xl tracking-tight font-extrabold text-gray-900 sm:text-6xl md:text-7xl mb-6 leading-tight">
-                Master your skills with{' '}
+                Master your academic skills with{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">
                   PeerPulse
                 </span>
