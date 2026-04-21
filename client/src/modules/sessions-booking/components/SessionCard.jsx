@@ -371,7 +371,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
               {isTutor && (
                 <label className="inline-flex items-center gap-2 bg-indigo-600 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer">
                   <input type="file" className="hidden" onChange={handleNotesUpload} />
-                  {noteBusy ? 'Uploading...' : 'Upload Notes File'}
+                  {noteBusy ? 'Uploading...' : 'Upload Notes'}
                 </label>
               )}
               {session.sessionNotesFile?.path && (
