@@ -119,13 +119,24 @@ export default function LoginPage() {
   const [error, setError] = useState('');
 
   const errors = {
-    email: !form.email.trim() ? 'Email is required' : !form.email.toLowerCase().endsWith('@my.sliit.lk') ? 'Must be a @my.sliit.lk address' : '',
-    password: !form.password ? 'Password is required' : form.password.length < 6 ? 'Minimum 6 characters' : '',
+    email: !form.email.trim()
+      ? 'Please enter your university email address.'
+      : !form.email.toLowerCase().endsWith('@my.sliit.lk')
+        ? 'Use your SLIIT email (itXXXXXXXX@my.sliit.lk).'
+        : '',
+    password: !form.password
+      ? 'Please enter your password.'
+      : form.password.length < 6
+        ? 'Password must be at least 6 characters.'
+        : '',
   };
   const isValid = !errors.email && !errors.password;
 
-  const set  = (e) => { setForm({ ...form, [e.target.name]: e.target.value }); setError(''); };
-  const blur = (e) => setTouched({ ...touched, [e.target.name]: true });
+  const handleInputChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError('');
+  };
+  const handleBlur = (e) => setTouched({ ...touched, [e.target.name]: true });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -142,7 +153,7 @@ export default function LoginPage() {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid email or password.');
+      setError(err.response?.data?.message || 'Email or password is incorrect. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -231,8 +242,8 @@ export default function LoginPage() {
                     </svg>
                   </span>
                   <input
-                    name="email" type="email" placeholder="yourstudentID@my.sliit.lk"
-                    value={form.email} onChange={set} onBlur={blur}
+                    name="email" type="email" placeholder="itXXXXXXXX@my.sliit.lk"
+                    value={form.email} onChange={handleInputChange} onBlur={handleBlur}
                     className={inputCls('email')}
                     autoComplete="email"
                   />
@@ -258,7 +269,7 @@ export default function LoginPage() {
                   </span>
                   <input
                     name="password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password"
-                    value={form.password} onChange={set} onBlur={blur}
+                    value={form.password} onChange={handleInputChange} onBlur={handleBlur}
                     className={`${inputCls('password')} pr-10`}
                     autoComplete="current-password"
                   />

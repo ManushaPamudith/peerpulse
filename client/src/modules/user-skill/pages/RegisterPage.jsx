@@ -118,29 +118,29 @@ export default function RegisterPage() {
   // real-time validation
   useEffect(() => {
     const e = {};
-    if (!form.name.trim()) e.name = 'Full name is required';
-    else if (form.name.trim().length < 3) e.name = 'At least 3 characters required';
+    if (!form.name.trim()) e.name = 'Please enter your full name.';
+    else if (form.name.trim().length < 3) e.name = 'Full name must be at least 3 characters.';
 
-    if (!form.email.trim()) e.email = 'Email is required';
+    if (!form.email.trim()) e.email = 'Please enter your university email address.';
     else if (!/^it\d{8}@my\.sliit\.lk$/.test(form.email.trim().toLowerCase()))
-      e.email = 'Email must be in format itXXXXXXXX@my.sliit.lk';
+      e.email = 'Use format itXXXXXXXX@my.sliit.lk.';
 
-    if (!form.password) e.password = 'Password is required';
-    else if (form.password.length < 6) e.password = 'Minimum 6 characters required';
+    if (!form.password) e.password = 'Please enter a password.';
+    else if (form.password.length < 6) e.password = 'Password must be at least 6 characters.';
 
-    if (!form.confirmPassword) e.confirmPassword = 'Please confirm your password';
-    else if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match';
+    if (!form.confirmPassword) e.confirmPassword = 'Please confirm your password.';
+    else if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match.';
 
     if (form.phone && !/^0[0-9]{9}$/.test(form.phone))
-      e.phone = 'Phone must be 10 digits starting with 0 (e.g. 0771234567)';
+      e.phone = 'Use a 10-digit phone number starting with 0 (e.g., 0771234567).';
 
     setErrors(e);
   }, [form]);
 
   const isValid = Object.keys(errors).length === 0;
 
-  const set   = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const blur  = (e) => setTouched({ ...touched, [e.target.name]: true });
+  const handleInputChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleBlur = (e) => setTouched({ ...touched, [e.target.name]: true });
 
   const handleAvatar = (e) => {
     const file = e.target.files[0];
@@ -295,7 +295,7 @@ export default function RegisterPage() {
             <Field label="Full Name" error={errors.name} touched={touched.name}>
               <input
                 name="name" type="text" placeholder="e.g. Kavindu Perera"
-                value={form.name} onChange={set} onBlur={blur}
+                value={form.name} onChange={handleInputChange} onBlur={handleBlur}
                 className={inputCls(touched.name && errors.name)}
                 autoComplete="name"
               />
@@ -305,8 +305,8 @@ export default function RegisterPage() {
             <Field label="University Email" error={errors.email} touched={touched.email}>
               <div className="relative">
                 <input
-                  name="email" type="email" placeholder="yourstudentID@my.sliit.lk"
-                  value={form.email} onChange={set} onBlur={blur}
+                  name="email" type="email" placeholder="itXXXXXXXX@my.sliit.lk"
+                  value={form.email} onChange={handleInputChange} onBlur={handleBlur}
                   className={inputCls(touched.email && errors.email)}
                   autoComplete="email"
                 />
@@ -318,14 +318,14 @@ export default function RegisterPage() {
                   </span>
                 )}
               </div>
-              {!errors.email && <p className="mt-1 text-xs text-slate-400">Must end with @my.sliit.lk</p>}
+              {!errors.email && <p className="mt-1 text-xs text-slate-400">Use format itXXXXXXXX@my.sliit.lk</p>}
             </Field>
 
             {/* Phone */}
             <Field label="Phone Number" error={errors.phone} touched={touched.phone} optional>
               <input
-                name="phone" type="tel" placeholder="+94 77 123 4567"
-                value={form.phone} onChange={set} onBlur={blur}
+                name="phone" type="tel" placeholder="0771234567"
+                value={form.phone} onChange={handleInputChange} onBlur={handleBlur}
                 className={inputCls(touched.phone && errors.phone)}
                 autoComplete="tel"
               />
@@ -336,7 +336,7 @@ export default function RegisterPage() {
               <div className="relative">
                 <input
                   name="password" type={showPassword ? 'text' : 'password'} placeholder="Minimum 6 characters"
-                  value={form.password} onChange={set} onBlur={blur}
+                  value={form.password} onChange={handleInputChange} onBlur={handleBlur}
                   className={inputCls(touched.password && errors.password)}
                   autoComplete="new-password"
                 />
@@ -352,7 +352,7 @@ export default function RegisterPage() {
               <div className="relative">
                 <input
                   name="confirmPassword" type={showConfirm ? 'text' : 'password'} placeholder="Re-enter your password"
-                  value={form.confirmPassword} onChange={set} onBlur={blur}
+                  value={form.confirmPassword} onChange={handleInputChange} onBlur={handleBlur}
                   className={inputCls(touched.confirmPassword && errors.confirmPassword)}
                   autoComplete="new-password"
                 />
