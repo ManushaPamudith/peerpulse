@@ -314,11 +314,12 @@ export default function FeedbackPage() {
               <RatingSummary reviews={receivedReviews} />
               <div className="bg-white border border-slate-100 rounded-2xl p-4 mb-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
-                  <p className="text-sm font-semibold text-slate-700">Feedback Insights Report</p>
+                  {/* Quick snapshot heading for tutor-side review insights. */}
+                  <p className="text-sm font-semibold text-slate-700">Feedback Overview Report</p>
                   <button
                     type="button"
                     className="text-xs font-semibold border border-amber-200 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg cursor-default"
-                    title="Report generation is available from the Admin reports page"
+                    title="PDF report generation is available in the Admin reports page"
                   >
                     Generate Feedback Report
                   </button>
@@ -356,7 +357,7 @@ export default function FeedbackPage() {
                 </div>
               </div>
               {displayedReviews.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-8">No feedback entries match your current filters yet.</p>
+                <p className="text-sm text-slate-400 text-center py-8">No feedback entries match your current filters.</p>
               ) : (
                 <div className="space-y-4">
                   {displayedReviews.map(r => <ReviewCard key={r._id} review={r} currentUserId={user?._id} onFlag={handleFlag} flaggedByMe={flaggedReviewIds.has(String(r._id))} />)}
