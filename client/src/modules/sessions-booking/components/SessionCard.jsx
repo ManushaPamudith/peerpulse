@@ -128,6 +128,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
 
   const togglePanel = (panel) => setActivePanel((prev) => (prev === panel ? null : panel));
 
+  // Execute an action on the session and refresh the data
   const runAction = async (payload) => {
     setBusy(true);
     try {
@@ -140,6 +141,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
     }
   };
 
+  // Handle session status changes (Confirm, Start, End, Cancel)
   const handleStatus = async (newStatus) => {
     if (newStatus === 'Cancelled') {
       togglePanel('cancel');
@@ -151,13 +153,22 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
   const handleRescheduleRequest = async (e) => {
     e.preventDefault();
     setRescheduleErr('');
-    if (!newDate || !newTime || !rescheduleReason.trim()) {
-      setRescheduleErr('New date, time, and a reason are required');
+    // Validate each field individually to provide clear error messages
+    if (!newDate) {
+      setRescheduleErr('Please select a new date for the session');
+      return;
+    }
+    if (!newTime) {
+      setRescheduleErr('Please select a new time for the session');
+      return;
+    }
+    if (!rescheduleReason.trim()) {
+      setRescheduleErr('Please provide a reason for the reschedule request');
       return;
     }
     const dt = new Date(`${newDate}T${newTime}`);
     if (dt <= new Date()) {
-      setRescheduleErr('Rescheduled time must be in the future');
+      setRescheduleErr('The new date and time must be in the future');
       return;
     }
 
@@ -188,8 +199,9 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
   const handleCancel = async (e) => {
     e.preventDefault();
     setCancelErr('');
+    // Require cancellation reason for audit trail
     if (!cancelReason.trim()) {
-      setCancelErr('Cancellation reason is required');
+      setCancelErr('Please provide a reason for cancelling this session');
       return;
     }
     try {
@@ -203,7 +215,11 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
   const handleFeedback = async (e) => {
     e.preventDefault();
     setFbErr('');
-    if (!fbComment.trim()) { setFbErr('Feedback comment is required'); return; }
+    // Learners can only submit feedback after session is completed
+    if (!fbComment.trim()) {
+      setFbErr('Please share your feedback about this session');
+      return;
+    }
     setBusy(true);
     try {
       const { data } = await api.post('/reviews', {
@@ -224,8 +240,9 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
   const handleSendMessage = async (e) => {
     e.preventDefault();
     setChatErr('');
+    // Real-time chat between learner and tutor for session coordination
     if (!chatText.trim()) {
-      setChatErr('Enter a message before sending');
+      setChatErr('Please type a message before sending');
       return;
     }
     setBusy(true);
@@ -439,7 +456,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
         <div className="px-5 py-3 border-t border-slate-100 flex flex-wrap gap-2 items-center">
           {isTutor && status === 'Scheduled' && (
             <button onClick={() => handleStatus('Confirmed')} disabled={busy} className="bg-sky-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-sky-700 disabled:opacity-50">
-              ✅ Confirm Session
+              ✓ Confirm Session
             </button>
           )}
 
@@ -460,7 +477,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
 
           {['Scheduled', 'Confirmed'].includes(status) && (
             <button onClick={() => handleStatus('Cancelled')} disabled={busy} className="border border-red-200 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-50 disabled:opacity-50">
-              Cancel Session
+              ✕ Cancel Session
             </button>
           )}
 
@@ -495,21 +512,21 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
           <p className="text-xs font-semibold text-slate-700 mb-3 flex items-center gap-1.5"><span>📅</span> Request New Session Time</p>
           <form onSubmit={handleRescheduleRequest} className="grid md:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-slate-500 mb-1">New Date</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">New Date</label>
               <input type="date" min={new Date().toISOString().slice(0, 10)} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white" value={newDate} onChange={(e) => setNewDate(e.target.value)} required />
             </div>
             <div>
-              <label className="block text-xs text-slate-500 mb-1">New Time</label>
+              <label className="block text-xs text-slate-500 font-medium mb-1">New Time</label>
               <input type="time" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white" value={newTime} onChange={(e) => setNewTime(e.target.value)} required />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-xs text-slate-500 mb-1">Reason</label>
-              <textarea className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white" rows={3} value={rescheduleReason} onChange={(e) => setRescheduleReason(e.target.value)} placeholder="Why should the session be moved?" required />
+              <label className="block text-xs text-slate-500 font-medium mb-1">Reason for Rescheduling</label>
+              <textarea className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white" rows={3} value={rescheduleReason} onChange={(e) => setRescheduleReason(e.target.value)} placeholder="Explain why you need to reschedule this session..." required />
             </div>
             {rescheduleErr && <p className="md:col-span-2 text-xs text-red-600">{rescheduleErr}</p>}
             <div className="md:col-span-2 flex gap-2">
-              <button type="submit" disabled={busy} className="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">Send Request</button>
-              <button type="button" onClick={() => setActivePanel(null)} className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-100">Close</button>
+              <button type="submit" disabled={busy} className="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">✓ Send Request</button>
+              <button type="button" onClick={() => setActivePanel(null)} className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-100">✕ Close</button>
             </div>
           </form>
         </div>
@@ -518,13 +535,13 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
       {activePanel === 'cancel' && (
         <div className="border-t border-slate-100 px-5 py-4 bg-red-50/50">
           <p className="text-xs font-semibold text-red-700 mb-3 flex items-center gap-1.5"><span>🛑</span> Cancellation Policy</p>
-          <p className="text-sm text-slate-600 mb-3">Please provide a valid reason before cancelling. This helps the other participant understand the change and keeps a clear audit trail for the session.</p>
+          <p className="text-sm text-slate-600 mb-3">Please provide a valid reason before cancelling. This helps the other participant understand the change and keeps a clear record of the cancellation.</p>
           <form onSubmit={handleCancel} className="space-y-3">
-            <textarea className="w-full px-3 py-2 border border-red-200 rounded-lg text-sm bg-white" rows={3} value={cancelReason} onChange={(e) => setCancelReason(e.target.value)} placeholder="Explain why this session must be cancelled" required />
+            <textarea className="w-full px-3 py-2 border border-red-200 rounded-lg text-sm bg-white placeholder-slate-400" rows={3} value={cancelReason} onChange={(e) => setCancelReason(e.target.value)} placeholder="Explain why this session needs to be cancelled..." required />
             {cancelErr && <p className="text-xs text-red-600">{cancelErr}</p>}
             <div className="flex gap-2">
-              <button type="submit" disabled={busy} className="bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50">Confirm Cancel</button>
-              <button type="button" onClick={() => setActivePanel(null)} className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-100">Keep Session</button>
+              <button type="submit" disabled={busy} className="bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50">✓ Confirm Cancellation</button>
+              <button type="button" onClick={() => setActivePanel(null)} className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-100">✕ Keep Session</button>
             </div>
           </form>
         </div>
@@ -533,12 +550,12 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
       {activePanel === 'chat' && (
         <div className="border-t border-slate-100 px-5 py-4 bg-slate-50">
           <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
-            <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5"><span>💬</span> Learner ↔ Tutor Chat</p>
-            <p className="text-xs text-slate-400">Both learner and tutor can see this thread and reply to each other.</p>
+            <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5"><span>💬</span> Session Chat</p>
+            <p className="text-xs text-slate-400">Share questions, notes, and updates with your session partner</p>
           </div>
           <div className="bg-slate-100 rounded-2xl p-3 space-y-3 max-h-72 overflow-y-auto">
             {displayMessages.length === 0 ? (
-              <div className="text-sm text-slate-400 text-center py-8">No messages yet. Start the conversation.</div>
+              <div className="text-sm text-slate-400 text-center py-8">No messages yet. Start the conversation!</div>
             ) : (
               displayMessages.map((message) => (
                 <ChatBubble
@@ -552,7 +569,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
             )}
           </div>
           <form onSubmit={handleSendMessage} className="mt-3 flex gap-2">
-            <input className="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white" value={chatText} onChange={(e) => setChatText(e.target.value)} placeholder={`Type a message to the ${peerRole.toLowerCase()}...`} />
+            <input className="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white placeholder-slate-400" value={chatText} onChange={(e) => setChatText(e.target.value)} placeholder={`Message the ${peerRole.toLowerCase()}...`} />
             <button type="submit" disabled={busy} className="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700 disabled:opacity-50">Send</button>
           </form>
           {chatErr && <p className="text-xs text-red-600 mt-2">{chatErr}</p>}
@@ -561,16 +578,16 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
 
       {activePanel === 'feedback' && !fbDone && (
         <div className="border-t border-amber-100 px-5 py-4 bg-amber-50/40">
-          <p className="text-xs font-semibold text-slate-700 mb-3 flex items-center gap-1.5"><span>⭐</span> Rate this Session</p>
+          <p className="text-xs font-semibold text-slate-700 mb-3 flex items-center gap-1.5"><span>⭐</span> Rate This Session</p>
           <form onSubmit={handleFeedback} className="space-y-3">
             <StarPicker value={fbRating} onChange={setFbRating} />
-            <textarea className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none bg-white" rows={3} value={fbComment} onChange={(e) => setFbComment(e.target.value)} placeholder="Share your experience..." />
+            <textarea className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none bg-white" rows={3} value={fbComment} onChange={(e) => setFbComment(e.target.value)} placeholder="Share your experience and feedback about this session..." />
             {fbErr && <p className="text-xs text-red-600">{fbErr}</p>}
             <div className="flex gap-2">
               <button type="submit" disabled={busy || !fbComment.trim()} className="bg-amber-400 text-slate-900 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-amber-300 disabled:opacity-50">
-                {busy ? 'Submitting...' : 'Submit Feedback'}
+                {busy ? '⏳ Submitting...' : '✓ Submit Feedback'}
               </button>
-              <button type="button" onClick={() => setActivePanel(null)} className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-100">Cancel</button>
+              <button type="button" onClick={() => setActivePanel(null)} className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-100">✕ Cancel</button>
             </div>
           </form>
         </div>
