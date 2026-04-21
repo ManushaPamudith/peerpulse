@@ -319,7 +319,7 @@ export default function FeedbackPage() {
                     className="text-xs font-semibold border border-amber-200 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg cursor-default"
                     title="Report generation is available from the Admin reports page"
                   >
-                    Generate Report (Admin)
+                    Generate Feedback Report
                   </button>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-2">
