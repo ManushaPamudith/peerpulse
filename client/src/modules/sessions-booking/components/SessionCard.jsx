@@ -341,8 +341,9 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
         </div>
 
         <div className="grid lg:grid-cols-2 gap-3 mb-4">
+          {/* Keep core session context labels easy to scan. */}
           <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
-            <p className="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-1">Learner Goal</p>
+            <p className="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-1">Learning Goal</p>
             <p className="text-sm text-slate-700 leading-relaxed">{session.learnerGoal || 'No learner goal provided.'}</p>
           </div>
           <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
@@ -362,16 +363,16 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div>
               {/* Keep this section easy to scan for tutors. */}
-              <p className="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-1">Tutor Notes File</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-1">Tutor Notes Attachment</p>
               <p className="text-sm text-slate-600">
-                {session.sessionNotesFile?.originalName ? `Uploaded file: ${session.sessionNotesFile.originalName}` : 'No tutor notes file uploaded yet.'}
+                {session.sessionNotesFile?.originalName ? `Uploaded file: ${session.sessionNotesFile.originalName}` : 'No tutor notes uploaded yet for this session.'}
               </p>
             </div>
             <div className="flex flex-wrap gap-2 items-center">
               {isTutor && (
                 <label className="inline-flex items-center gap-2 bg-indigo-600 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer">
                   <input type="file" className="hidden" onChange={handleNotesUpload} />
-                  {noteBusy ? 'Uploading...' : 'Upload Notes'}
+                  {noteBusy ? 'Uploading...' : 'Upload Tutor Notes'}
                 </label>
               )}
               {session.sessionNotesFile?.path && (
