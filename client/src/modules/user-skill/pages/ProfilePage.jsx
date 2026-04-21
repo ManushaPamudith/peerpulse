@@ -35,6 +35,7 @@ const editModeStyles = `
   .toast-exit  { animation: toastOut 0.3s ease forwards; }
 `;
 
+// improved validation
 function ToastNotification({ toasts, onDismiss }) {
   return (
     <div className="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none" style={{ minWidth: 300, maxWidth: 360 }}>
