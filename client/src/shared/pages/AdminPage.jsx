@@ -135,7 +135,7 @@ function VerificationQueue({ onCountChange }) {
         ) : verifications.length === 0 ? (
           <div className="text-center py-12 text-slate-400">
             <div className="text-4xl mb-3">✅</div>
-            <p className="text-sm font-medium">No {filter === 'all' ? '' : filter} requests</p>
+            <p className="text-sm font-medium">No {filter === 'all' ? '' : filter} requests found</p>
           </div>
         ) : (
           <div className="space-y-4">
