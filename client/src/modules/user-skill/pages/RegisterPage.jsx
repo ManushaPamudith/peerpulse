@@ -257,7 +257,7 @@ export default function RegisterPage() {
           </Link>
 
           <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Create account</h2>
+            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Create Account</h2>
             <p className="mt-2 text-sm text-slate-500">
               Already a member?{' '}
               <Link to="/login" className="font-semibold text-violet-600 hover:text-violet-500 transition-colors">
@@ -318,7 +318,7 @@ export default function RegisterPage() {
                   </span>
                 )}
               </div>
-              {!errors.email && <p className="mt-1 text-xs text-slate-400">Use format itXXXXXXXX@my.sliit.lk</p>}
+              {!errors.email && <p className="mt-1 text-xs text-slate-400">Use format itXXXXXXXX@my.sliit.lk.</p>}
             </Field>
 
             {/* Phone */}

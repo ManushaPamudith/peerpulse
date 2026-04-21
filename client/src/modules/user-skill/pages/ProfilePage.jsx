@@ -508,7 +508,7 @@ export default function ProfilePage() {
                   <div>
                     <label className={labelCls}>University</label>
                     <select className={selectCls} value={profileForm.university} onChange={(e) => setProfileForm({ ...profileForm, university: e.target.value })}>
-                      <option value="">Select campus</option>
+                      <option value="">Select university</option>
                       <option value="SLIIT Malabe">SLIIT Malabe</option>
                       <option value="SLIIT Kandy">SLIIT Kandy</option>
                       <option value="SLIIT Matara">SLIIT Matara</option>
@@ -519,9 +519,10 @@ export default function ProfilePage() {
                   <div>
                     <label className={labelCls}>Bio</label>
                     <textarea className={`${inputCls} resize-none`} rows={3} value={profileForm.bio} onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })} placeholder="Short bio about yourself" />
+                    <p className="mt-1 text-xs text-slate-400">Add a short introduction about your learning interests.</p>
                   </div>
                   <button type="submit" disabled={profileLoading || !!phoneError} className="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 text-sm">
-                    {profileLoading ? 'Saving...' : 'Update Profile'}
+                    {profileLoading ? 'Saving changes...' : 'Save Changes'}
                   </button>
                 </form>
               </div>
@@ -605,6 +606,7 @@ export default function ProfilePage() {
                           <option>Expert</option>
                         </select>
                         {skillErrors.level && <p className="mt-1.5 text-xs text-red-500">{skillErrors.level}</p>}
+                        {!skillErrors.level && <p className="mt-1 text-xs text-slate-400">Select your current proficiency level.</p>}
                       </div>
 
                       {/* Technical Category */}
@@ -690,6 +692,7 @@ export default function ProfilePage() {
                           <option>Expert</option>
                         </select>
                         {skillErrors.level && <p className="mt-1.5 text-xs text-red-500">{skillErrors.level}</p>}
+                        {!skillErrors.level && <p className="mt-1 text-xs text-slate-400">Select your current proficiency level.</p>}
                       </div>
 
                       {/* Read-only preview of what will be saved */}
@@ -749,7 +752,8 @@ export default function ProfilePage() {
               {skills.length === 0 ? (
                 <div className="text-center py-12 text-slate-400">
                   <div className="text-4xl mb-3">🧠</div>
-                  <p className="text-sm">No skills added yet. Add your first skill to get started.</p>
+                  <p className="text-sm">No skills added yet.</p>
+                  <p className="text-xs mt-1">Add your first skill to start receiving learning requests.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
