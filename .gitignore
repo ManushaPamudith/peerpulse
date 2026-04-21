@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# env
+.env
+
+# build
+dist/
+build/
+
+# editor
+.vscode/
+.kiro/
+
+# misc
+.DS_Store

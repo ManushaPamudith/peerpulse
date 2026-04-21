@@ -1,0 +1,84 @@
+PeerPulse-Progress1/
+├── README.md
+├── PROJECT_STRUCTURE.txt
+├── docs/
+│   ├── member-wise-file-structure.md
+│   └── further-extension-guide.md
+├── client/
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── index.html
+│   └── src/
+│       ├── App.jsx
+│       ├── main.jsx
+│       ├── styles/
+│       │   └── global.css
+│       ├── data/
+│       │   └── mockData.js
+│       ├── components/
+│       │   ├── layout/
+│       │   │   └── Layout.jsx
+│       │   ├── profile/
+│       │   │   ├── SkillCard.jsx
+│       │   │   ├── SkillForm.jsx
+│       │   │   └── VerificationPanel.jsx
+│       │   ├── request/
+│       │   │   ├── TutorCard.jsx
+│       │   │   └── RequestCard.jsx
+│       │   ├── session/
+│       │   │   ├── SessionCard.jsx
+│       │   │   └── SessionForm.jsx
+│       │   ├── feedback/
+│       │   │   └── ReviewCard.jsx
+│       │   └── admin/
+│       │       └── StatCard.jsx
+│       ├── pages/
+│       │   ├── HomePage.jsx
+│       │   ├── RegisterPage.jsx
+│       │   ├── LoginPage.jsx
+│       │   ├── DashboardPage.jsx
+│       │   ├── ProfilePage.jsx
+│       │   ├── DiscoverPage.jsx
+│       │   ├── RequestsPage.jsx
+│       │   ├── SessionsPage.jsx
+│       │   ├── FeedbackPage.jsx
+│       │   └── AdminPage.jsx
+│       └── services/
+│           ├── api.js
+│           ├── authService.js
+│           ├── userService.js
+│           ├── requestService.js
+│           ├── sessionService.js
+│           ├── reviewService.js
+│           └── adminService.js
+└── server/
+    ├── package.json
+    ├── .env.example
+    └── src/
+        ├── server.js
+        ├── config/
+        │   └── db.js
+        ├── middleware/
+        │   └── authMiddleware.js
+        ├── utils/
+        │   ├── generateToken.js
+        │   └── validators.js
+        ├── models/
+        │   ├── User.js
+        │   ├── SkillRequest.js
+        │   ├── Session.js
+        │   └── Review.js
+        ├── controllers/
+        │   ├── authController.js
+        │   ├── userController.js
+        │   ├── requestController.js
+        │   ├── sessionController.js
+        │   ├── reviewController.js
+        │   └── adminController.js
+        └── routes/
+            ├── authRoutes.js
+            ├── userRoutes.js
+            ├── requestRoutes.js
+            ├── sessionRoutes.js
+            ├── reviewRoutes.js
+            └── adminRoutes.js
