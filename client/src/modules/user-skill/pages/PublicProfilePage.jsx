@@ -269,7 +269,10 @@ export default function PublicProfilePage() {
           </div>
 
           {profile.skills.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-6">No skills added yet.</p>
+            <div className="text-center py-6 text-slate-400">
+              <p className="text-sm">No skills listed yet.</p>
+              <p className="text-xs mt-1">This user has not added skills to their public profile yet.</p>
+            </div>
           ) : (
             <div className="space-y-4">
               {/* Verified skills first */}
