@@ -361,6 +361,7 @@ export default function SessionCard({ session, onAction, currentUserId, currentR
         <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-4 mb-4">
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div>
+              {/* Keep this section easy to scan for tutors. */}
               <p className="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-1">Tutor Notes File</p>
               <p className="text-sm text-slate-600">
                 {session.sessionNotesFile?.originalName ? `Uploaded file: ${session.sessionNotesFile.originalName}` : 'No tutor notes file uploaded yet.'}
