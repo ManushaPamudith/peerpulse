@@ -134,16 +134,19 @@ export default function ReviewCard({ review, currentUserId, onFlag, flaggedByMe 
             <option value="Irrelevant">Irrelevant</option>
           </select>
           {flagError && <p className="text-xs text-red-500 mt-1">{flagError}</p>}
+          {/* Keep flag actions explicit and discoverable. */}
           <div className="flex gap-2 mt-2">
             <button
               onClick={handleFlagSubmit}
               disabled={!flagReason}
+              title="Submit this flag for review"
               className="text-xs px-2.5 py-1 rounded-lg bg-amber-500 text-white font-medium hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Submit
             </button>
             <button
               onClick={handleFlagCancel}
+              title="Cancel flag reporting"
               className="text-xs px-2.5 py-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors"
             >
               Cancel
@@ -159,6 +162,7 @@ export default function ReviewCard({ review, currentUserId, onFlag, flaggedByMe 
         ) : canFlag && !showFlagUI ? (
           <button
             onClick={() => setShowFlagUI(true)}
+            title="Report this feedback"
             className="text-xs text-slate-400 hover:text-amber-500 transition-colors"
           >
             🚩 Flag
