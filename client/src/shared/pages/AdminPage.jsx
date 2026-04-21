@@ -20,7 +20,7 @@ function StatusPill({ status }) {
     verified: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
     rejected: 'bg-red-100 text-red-600 border border-red-200',
   };
-  const label = { pending: '🕐 Pending', verified: '✓ Approved', rejected: '✗ Rejected' };
+  const label = { pending: '🕐 Pending Review', verified: '✓ Approved', rejected: '✗ Rejected' };
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${map[status] || 'bg-slate-100 text-slate-600'}`}>
       {label[status] || status}
@@ -301,9 +301,10 @@ function UserList() {
       </div>
 
       <div className="p-6">
+        {/* Quick lookup for user records by basic identity fields. */}
         <input
           type="text"
-          placeholder="Search by name or email..."
+          placeholder="Search users by name or email..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full mb-4 px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
@@ -312,7 +313,7 @@ function UserList() {
         {loading ? (
           <div className="text-sm text-slate-400 py-6 text-center">Loading users...</div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-8 text-slate-400 text-sm">No users found</div>
+          <div className="text-center py-8 text-slate-400 text-sm">No users found matching your search.</div>
         ) : (
           <div className="space-y-2">
             {filtered.map(u => {
@@ -347,7 +348,7 @@ function UserList() {
                     )}
                     <Link to={`/profile/${u._id}`}
                       className="text-xs font-semibold text-indigo-600 border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 rounded-full hover:bg-indigo-100 transition-colors">
-                      View Profile
+                      View User Profile
                     </Link>
                   </div>
                 </div>
