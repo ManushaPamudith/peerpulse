@@ -101,20 +101,21 @@ export default function ReviewCard({ review, currentUserId, onFlag, flaggedByMe 
             </div>
             <div className="flex flex-col items-end gap-0.5 shrink-0">
               <StarDisplay rating={review.rating} size={4} />
-              <span className="text-xs font-bold text-amber-500">{review.rating}/5</span>
+              <span className="text-xs font-bold text-amber-500">Rating: {review.rating}/5</span>
             </div>
           </div>
         </div>
       </div>
 
       {review.session?.title && (
-        <p className="text-xs text-indigo-500 font-medium mb-2 ml-12">📚 {review.session.title}</p>
+        <p className="text-xs text-indigo-500 font-medium mb-2 ml-12">Session: {review.session.title}</p>
       )}
 
       {review.comment && (
-        <p className="text-sm text-slate-600 bg-slate-50 rounded-xl px-4 py-3 leading-relaxed border border-slate-100 ml-12">
-          "{review.comment}"
-        </p>
+        <div className="bg-slate-50 rounded-xl px-4 py-3 leading-relaxed border border-slate-100 ml-12">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Feedback Comment</p>
+          <p className="text-sm text-slate-600">{review.comment}</p>
+        </div>
       )}
 
       {/* Flag UI */}

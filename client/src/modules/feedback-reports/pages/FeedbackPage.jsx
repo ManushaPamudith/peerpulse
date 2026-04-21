@@ -7,7 +7,7 @@ import ReviewCard, { RatingSummary } from '../components/ReviewCard';
 function StarPicker({ value, onChange }) {
   const [hovered, setHovered] = useState(0);
   return (
-    <div className="flex gap-1 items-center">
+    <div className="flex gap-1 items-center flex-wrap">
       {[1,2,3,4,5].map(s => (
         <button key={s} type="button"
           onMouseEnter={() => setHovered(s)} onMouseLeave={() => setHovered(0)}
@@ -17,7 +17,7 @@ function StarPicker({ value, onChange }) {
           </svg>
         </button>
       ))}
-      <span className="ml-2 text-sm font-semibold text-slate-600">{value} / 5</span>
+      <span className="ml-2 text-sm font-semibold text-slate-600">Rating: {value} / 5</span>
     </div>
   );
 }
@@ -50,7 +50,7 @@ export default function FeedbackPage() {
       setReviews(rRes.data.reviews);
       setAvgRatingFromServer(rRes.data.avgRating ?? null);
     } catch {
-      setError('Failed to load feedback data');
+      setError('Unable to load feedback data right now. Please try again.');
     } finally {
       setPageLoading(false);
     }
@@ -81,16 +81,16 @@ export default function FeedbackPage() {
     if (!form.rating)    { setFormError('Rating is required'); return; }
     if (!form.comment.trim()) { setFormError('Feedback comment is required'); return; }
     const sess = sessions.find(s => s._id === form.sessionId);
-    if (!sess || sess.status !== 'Completed') { setFormError('Feedback can only be submitted for completed sessions'); return; }
-    if (reviewedSessionIds.has(form.sessionId)) { setFormError('You have already submitted feedback for this session'); return; }
+    if (!sess || sess.status !== 'Completed') { setFormError('Feedback can only be submitted for completed sessions.'); return; }
+    if (reviewedSessionIds.has(form.sessionId)) { setFormError('You have already submitted feedback for this session.'); return; }
     setSubmitting(true);
     try {
       await api.post('/reviews', { sessionId: form.sessionId, rating: form.rating, comment: form.comment.trim() });
-      notify('Feedback submitted successfully');
+      notify('Feedback submitted successfully.');
       setForm({ sessionId: '', rating: 5, comment: '' });
       load();
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Submission failed');
+      setFormError(err.response?.data?.message || 'Unable to submit feedback. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -206,14 +206,14 @@ export default function FeedbackPage() {
         {/* ── SUBMIT TAB ── */}
         {activeTab === 'submit' && (
           pageLoading ? (
-            <div className="text-center py-16 text-slate-400 text-sm">Loading...</div>
+            <div className="text-center py-16 text-slate-400 text-sm">Loading feedback data...</div>
           ) : pendingSessions.length === 0 ? (
             <div className="text-center py-16 bg-white border border-slate-100 rounded-2xl">
               <div className="text-4xl mb-3">✅</div>
               <p className="text-sm font-medium text-slate-600">
-                {sessions.length === 0 ? 'No completed sessions yet' : 'All sessions have been reviewed'}
+                {sessions.length === 0 ? 'No completed sessions yet.' : 'All completed sessions have been reviewed.'}
               </p>
-              <p className="text-xs text-slate-400 mt-1">Complete a session to leave feedback</p>
+              <p className="text-xs text-slate-400 mt-1">Complete a session to leave feedback.</p>
             </div>
           ) : (
             <div className="max-w-lg">
@@ -240,6 +240,7 @@ export default function FeedbackPage() {
                         </option>
                       ))}
                     </select>
+                    <p className="text-xs text-slate-400 mt-1">Choose one completed session that you have not reviewed yet.</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -258,6 +259,7 @@ export default function FeedbackPage() {
                       onChange={e => setForm({ ...form, comment: e.target.value })}
                       placeholder="Share your experience with this session..."
                     />
+                    <p className="text-xs text-slate-400 mt-1">Keep your feedback clear, respectful, and specific.</p>
                   </div>
                   {formError && (
                     <div className="text-sm text-red-600 bg-red-50 border border-red-200 px-4 py-2.5 rounded-xl">{formError}</div>
@@ -280,7 +282,8 @@ export default function FeedbackPage() {
           givenReviews.length === 0 ? (
             <div className="text-center py-16 bg-white border border-slate-100 rounded-2xl">
               <div className="text-4xl mb-3">📤</div>
-              <p className="text-sm text-slate-500">You haven't submitted any feedback yet</p>
+              <p className="text-sm text-slate-500">You have not submitted any feedback yet.</p>
+              <p className="text-xs text-slate-400 mt-1">Submit feedback after a completed session to see it here.</p>
             </div>
           ) : (
             <div className="max-w-2xl">
@@ -297,37 +300,56 @@ export default function FeedbackPage() {
           receivedReviews.length === 0 ? (
             <div className="text-center py-16 bg-white border border-slate-100 rounded-2xl">
               <div className="text-4xl mb-3">📥</div>
-              <p className="text-sm text-slate-500">No feedback received yet</p>
+              <p className="text-sm text-slate-500">No feedback received yet.</p>
+              <p className="text-xs text-slate-400 mt-1">New feedback from learners will appear here.</p>
             </div>
           ) : (
             <div className="max-w-2xl">
               <RatingSummary reviews={receivedReviews} />
-              <div className="flex gap-2 mb-4">
-                <select
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value)}
-                  className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-300"
-                >
-                  <option value="newest">Newest first</option>
-                  <option value="oldest">Oldest first</option>
-                  <option value="highest">Highest rating</option>
-                  <option value="lowest">Lowest rating</option>
-                </select>
-                <select
-                  value={filterRating}
-                  onChange={e => setFilterRating(e.target.value)}
-                  className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-300"
-                >
-                  <option value="all">All ratings</option>
-                  <option value="5">5 stars</option>
-                  <option value="4">4 stars</option>
-                  <option value="3">3 stars</option>
-                  <option value="2">2 stars</option>
-                  <option value="1">1 star</option>
-                </select>
+              <div className="bg-white border border-slate-100 rounded-2xl p-4 mb-4 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                  <p className="text-sm font-semibold text-slate-700">Feedback Report</p>
+                  <button
+                    type="button"
+                    className="text-xs font-semibold border border-amber-200 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg cursor-default"
+                    title="Report generation is available from the Admin reports page"
+                  >
+                    Generate Report (Admin)
+                  </button>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={e => setSortBy(e.target.value)}
+                      className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-300"
+                    >
+                      <option value="newest">Newest first</option>
+                      <option value="oldest">Oldest first</option>
+                      <option value="highest">Highest rating</option>
+                      <option value="lowest">Lowest rating</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Filter by Rating</label>
+                    <select
+                      value={filterRating}
+                      onChange={e => setFilterRating(e.target.value)}
+                      className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-300"
+                    >
+                      <option value="all">All ratings</option>
+                      <option value="5">5 stars</option>
+                      <option value="4">4 stars</option>
+                      <option value="3">3 stars</option>
+                      <option value="2">2 stars</option>
+                      <option value="1">1 star</option>
+                    </select>
+                  </div>
+                </div>
               </div>
               {displayedReviews.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-8">No reviews match the selected filter</p>
+                <p className="text-sm text-slate-400 text-center py-8">No feedback entries match the selected filters.</p>
               ) : (
                 <div className="space-y-4">
                   {displayedReviews.map(r => <ReviewCard key={r._id} review={r} currentUserId={user?._id} onFlag={handleFlag} flaggedByMe={flaggedReviewIds.has(String(r._id))} />)}
