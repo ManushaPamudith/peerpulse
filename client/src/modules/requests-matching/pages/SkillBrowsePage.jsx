@@ -692,6 +692,7 @@ export default function SkillBrowsePage() {
                       </div>
                     )}
                   </div>
+                  <p className="text-xs text-slate-400 mt-1">Tip: search by skill name, tutor name, or keyword.</p>
                 </div>
                 <div>
                   {/* Quick filters for narrowing visible skills. */}
@@ -725,6 +726,7 @@ export default function SkillBrowsePage() {
                 <div className="flex items-center gap-2">
                   {(search || level !== 'All' || type !== 'All' || !verifiedOnly || sortBy !== 'match') && (
                     <button onClick={() => { setSearch(''); setLevel('All'); setType('All'); setVerifiedOnly(true); setSortBy('match'); }}
+                      title="Clear all selected filters"
                       className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors mr-2">
                       Clear Filters
                     </button>
@@ -746,12 +748,13 @@ export default function SkillBrowsePage() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-20 text-slate-400">
                 <div className="text-4xl mb-3">🔍</div>
-                <p className="text-sm font-medium">No skills found for the selected filters.</p>
-                <p className="text-xs mt-1">Try a broader keyword or reset the filters above.</p>
+                <p className="text-sm font-medium">No matching skills found.</p>
+                <p className="text-xs mt-1">Try a broader search term or clear filters above.</p>
               </div>
             ) : (
               <>
-                <p className="text-sm text-slate-500 mb-4">{filtered.length} skill{filtered.length !== 1 ? 's' : ''} found</p>
+                {/* Keep result count wording simple and scannable. */}
+                <p className="text-sm text-slate-500 mb-4">{filtered.length} matching skill result{filtered.length !== 1 ? 's' : ''}</p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filtered.map((item, idx) => {
                     const topMatch = sortBy === 'match' && idx < 3 && matchScore(item) >= 4;
