@@ -1,16 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../core/services/api';
 import { useAuth } from '../../../core/context/AuthContext';
 import SkillCard from '../components/SkillCard';
 import ReviewCard from '../../feedback-reports/components/ReviewCard';
-
-const levelColors = {
-  Beginner:     'bg-sky-50 text-sky-700',
-  Intermediate: 'bg-indigo-50 text-indigo-700',
-  Advanced:     'bg-violet-50 text-violet-700',
-  Expert:       'bg-purple-50 text-purple-700',
-};
 
 // ── Star rating display ───────────────────────────────────────────────────────
 function Stars({ rating }) {
@@ -33,7 +26,7 @@ function RequestModal({ tutor, skill, onClose, onSend, loading }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!message.trim()) { setErr('Message is required'); return; }
+    if (!message.trim()) { setErr('Please enter a short message for the tutor.'); return; }
     setErr('');
     await onSend(message.trim());
   };

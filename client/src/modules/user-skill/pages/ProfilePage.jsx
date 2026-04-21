@@ -35,7 +35,6 @@ const editModeStyles = `
   .toast-exit  { animation: toastOut 0.3s ease forwards; }
 `;
 
-// improved validation
 function ToastNotification({ toasts, onDismiss }) {
   return (
     <div className="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none" style={{ minWidth: 300, maxWidth: 360 }}>
@@ -149,7 +148,7 @@ export default function ProfilePage() {
   };
 
   const phoneError = profileForm.phone && !/^0[0-9]{9}$/.test(profileForm.phone)
-    ? 'Phone must be 10 digits starting with 0 (e.g. 0771234567)'
+    ? 'Use a 10-digit phone number starting with 0 (e.g., 0771234567).'
     : '';
 
   const updateProfile = async (e) => {
@@ -457,7 +456,7 @@ export default function ProfilePage() {
             {[
               { icon: '👤', label: 'Name',   value: user?.name },
               { icon: '📧', label: 'Email',  value: user?.email },
-              { icon: '🏫', label: 'Campus', value: user?.university || 'SLIIT' },
+              { icon: '🏫', label: 'University', value: user?.university || 'SLIIT' },
               { icon: '📞', label: 'Phone',  value: profileForm.phone || '—' },
             ].map(({ icon, label, value }) => (
               <div key={label} className="flex items-center gap-3 min-w-[180px]">
@@ -507,7 +506,7 @@ export default function ProfilePage() {
                     )}
                   </div>
                   <div>
-                    <label className={labelCls}>Campus</label>
+                    <label className={labelCls}>University</label>
                     <select className={selectCls} value={profileForm.university} onChange={(e) => setProfileForm({ ...profileForm, university: e.target.value })}>
                       <option value="">Select campus</option>
                       <option value="SLIIT Malabe">SLIIT Malabe</option>
