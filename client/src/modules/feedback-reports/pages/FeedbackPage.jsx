@@ -17,7 +17,7 @@ function StarPicker({ value, onChange }) {
           </svg>
         </button>
       ))}
-      <span className="ml-2 text-sm font-semibold text-slate-600">Rating: {value} / 5</span>
+      <span className="ml-2 text-sm font-semibold text-slate-600">Selected Rating: {value} out of 5</span>
     </div>
   );
 }
@@ -272,6 +272,7 @@ export default function FeedbackPage() {
                   <button
                     type="submit"
                     disabled={submitting || !form.sessionId || !form.comment.trim()}
+                    title="Submit your feedback for this session"
                     className="w-full bg-amber-400 text-slate-900 font-bold py-2.5 rounded-xl hover:bg-amber-300 transition-colors disabled:opacity-50 text-sm"
                   >
                     {submitting ? 'Submitting...' : 'Submit Feedback'}
@@ -313,7 +314,7 @@ export default function FeedbackPage() {
               <RatingSummary reviews={receivedReviews} />
               <div className="bg-white border border-slate-100 rounded-2xl p-4 mb-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
-                  <p className="text-sm font-semibold text-slate-700">Feedback Report</p>
+                  <p className="text-sm font-semibold text-slate-700">Feedback Summary Report</p>
                   <button
                     type="button"
                     className="text-xs font-semibold border border-amber-200 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg cursor-default"
@@ -322,6 +323,7 @@ export default function FeedbackPage() {
                     Generate Feedback Report
                   </button>
                 </div>
+                {/* Filters help tutors quickly focus on specific rating groups. */}
                 <div className="grid sm:grid-cols-2 gap-2">
                   <div>
                     <label className="block text-xs font-medium text-slate-500 mb-1">Sort By</label>
@@ -354,7 +356,7 @@ export default function FeedbackPage() {
                 </div>
               </div>
               {displayedReviews.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-8">No feedback entries match the selected filters.</p>
+                <p className="text-sm text-slate-400 text-center py-8">No feedback entries match your selected filters yet.</p>
               ) : (
                 <div className="space-y-4">
                   {displayedReviews.map(r => <ReviewCard key={r._id} review={r} currentUserId={user?._id} onFlag={handleFlag} flaggedByMe={flaggedReviewIds.has(String(r._id))} />)}
