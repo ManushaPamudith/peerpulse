@@ -38,7 +38,7 @@ export default function DiscoverTutorMatchCard({ tutor, isTopMatch, onSelect, on
         </div>
         <div className="text-right">
           <div className="text-lg font-extrabold text-slate-900">{tutor.matchingScore || 0}%</div>
-          <p className="text-[10px] text-slate-500">match score</p>
+          <p className="text-[10px] text-slate-500">Match Score</p>
         </div>
       </div>
 
