@@ -58,15 +58,15 @@ export default function AdvancedFilterPanel({ filters, onFiltersChange, isOpen, 
         <div className="p-5 space-y-5">
           {/* Skill Search */}
           <div>
-            <label className={labelCls}>Skill Name</label>
+            <label className={labelCls}>Skill or Keyword</label>
             <input
               type="text"
               className={inputCls}
-              placeholder="e.g. Python, React..."
+              placeholder="e.g. Python, React"
               value={localFilters.skill}
               onChange={(e) => handleChange('skill', e.target.value)}
             />
-            <p className="text-xs text-slate-400 mt-1">Search by skill name or keyword</p>
+            <p className="text-xs text-slate-400 mt-1">Search by skill name, topic, or keyword</p>
           </div>
 
           {/* Level */}
@@ -115,6 +115,7 @@ export default function AdvancedFilterPanel({ filters, onFiltersChange, isOpen, 
                 <option value={4.5}>4.5★ and above</option>
               </select>
             </div>
+            <p className="text-xs text-slate-400 mt-1">Show tutors with ratings above your selected threshold</p>
           </div>
 
           {/* Availability */}
@@ -142,7 +143,7 @@ export default function AdvancedFilterPanel({ filters, onFiltersChange, isOpen, 
               <option value="all">All Response Times</option>
               <option value="fast">Fast ⚡ (&lt;2 hours)</option>
               <option value="responsive">Responsive (2-8 hours)</option>
-              <option value="any">Any</option>
+              <option value="any">Any speed</option>
             </select>
           </div>
 
@@ -169,7 +170,7 @@ export default function AdvancedFilterPanel({ filters, onFiltersChange, isOpen, 
             onClick={handleReset}
             className="flex-1 border-2 border-slate-200 text-slate-600 font-semibold py-2.5 rounded-lg hover:bg-slate-50 transition-colors"
           >
-            Reset
+            Reset Filters
           </button>
           <button
             onClick={handleApply}

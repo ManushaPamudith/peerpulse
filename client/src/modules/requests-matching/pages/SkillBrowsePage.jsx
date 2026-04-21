@@ -46,10 +46,10 @@ function RequestModal({ item, onClose, onSend }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!msg.trim()) { setErr('Message is required'); return; }
+    if (!msg.trim()) { setErr('Please enter a short message for the tutor.'); return; }
     setLoading(true); setErr('');
     try { await onSend(item, msg.trim(), priority); onClose(); }
-    catch (e) { setErr(e.message || 'Request failed'); }
+    catch (e) { setErr(e.message || 'Unable to send the request. Please try again.'); }
     finally { setLoading(false); }
   };
 
@@ -285,9 +285,10 @@ function ReqCard({ request, currentUserId, onUpdate, updating, onCancel, canceli
         <div className="text-xs text-slate-400 shrink-0">{new Date(request.createdAt).toLocaleDateString()}</div>
       </div>
       {request.message && (
-        <p className="text-sm text-slate-600 bg-slate-50 rounded-xl px-4 py-3 mb-4 leading-relaxed border border-slate-100">
-          "{request.message}"
-        </p>
+        <div className="bg-slate-50 rounded-xl px-4 py-3 mb-4 border border-slate-100">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Message</p>
+          <p className="text-sm text-slate-600 leading-relaxed break-words">{request.message}</p>
+        </div>
       )}
       {isReceived && isPending && !isWithdrawn && !hasExpired && (
         <div className="flex gap-2">
@@ -460,7 +461,7 @@ export default function SkillBrowsePage() {
     try {
       const { data } = await api.get('/requests/discover', { params: { skill, level, verified } });
       setTutors(data.tutors);
-    } catch { setTutorsError('Failed to load tutors'); }
+    } catch { setTutorsError('Unable to load tutors right now. Please try again.'); }
     finally { setTutorsLoading(false); }
   };
 
@@ -473,7 +474,7 @@ export default function SkillBrowsePage() {
 
   const handleBlockTutor = (tutorId) => {
     setBlockedTutorIds(prev => new Set(prev).add(tutorId));
-    setTutorToast('Tutor blocked successfully. They will no longer appear in results.');
+    setTutorToast('Tutor blocked. They will no longer appear in your results.');
     setTimeout(() => setTutorToast(''), 4000);
     if (selectedTutorForDetails?._id === tutorId) {
       setSelectedTutorForDetails(null);
@@ -483,7 +484,7 @@ export default function SkillBrowsePage() {
 
   const handleReportTutor = (tutorId) => {
     setReportedTutorIds(prev => new Set(prev).add(tutorId));
-    setTutorToast('Tutor reported successfully. Thank you for your feedback.');
+    setTutorToast('Tutor reported. Thank you for your feedback.');
     setTimeout(() => setTutorToast(''), 4000);
   };
 
@@ -531,7 +532,7 @@ export default function SkillBrowsePage() {
           .filter((r) => r.status !== 'Cancelled')
           .map((r) => `${r.tutor?._id}-${r.skill}`)
       ));
-    } catch { setReqError('Failed to load requests'); }
+    } catch { setReqError('Unable to load requests right now. Please try again.'); }
     finally { setReqLoading(false); }
   };
 
@@ -542,7 +543,7 @@ export default function SkillBrowsePage() {
     try {
       await api.post('/requests', { tutorId: item.owner._id, skill: item.skill, message, priority });
       setSentSkillIds(prev => new Set([...prev, key]));
-      setSuccess(`Request sent to ${item.owner.name}`);
+      setSuccess(`Request sent to ${item.owner.name}.`);
       setTimeout(() => setSuccess(''), 4000);
     } finally { setRequesting(null); }
   };
@@ -551,11 +552,11 @@ export default function SkillBrowsePage() {
     setUpdating(id);
     try {
       await api.patch(`/requests/${id}/status`, { status });
-      setReqToast(`Request ${status.toLowerCase()} successfully`);
+      setReqToast(`Request ${status.toLowerCase()} successfully.`);
       setTimeout(() => setReqToast(''), 4000);
       loadRequests();
     } catch (err) {
-      setReqError(err.response?.data?.message || 'Update failed');
+      setReqError(err.response?.data?.message || 'Unable to update this request. Please try again.');
       setTimeout(() => setReqError(''), 4000);
     } finally { setUpdating(null); }
   };
@@ -570,9 +571,9 @@ export default function SkillBrowsePage() {
       };
 
       const messageMap = {
-        'cancel': 'Request cancelled successfully',
-        'cancel-accepted': 'Accepted request cancelled successfully',
-        'cancel-rejected': 'Rejection undone successfully',
+        'cancel': 'Request cancelled successfully.',
+        'cancel-accepted': 'Accepted request cancelled successfully.',
+        'cancel-rejected': 'Rejection undone successfully.',
       };
 
       await actionMap[action]();
@@ -580,7 +581,7 @@ export default function SkillBrowsePage() {
       setTimeout(() => setReqToast(''), 4000);
       loadRequests();
     } catch (err) {
-      setReqError(err.response?.data?.message || 'Action failed');
+      setReqError(err.response?.data?.message || 'Unable to complete this action. Please try again.');
       setTimeout(() => setReqError(''), 4000);
     } finally { setCanceling(null); }
   };
@@ -666,13 +667,14 @@ export default function SkillBrowsePage() {
           <>
             <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5 mb-6">
               <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-3">
-                <div className="lg:col-span-2 relative">
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                <div className="lg:col-span-2">
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Search</label>
                   <div className="relative">
+                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                     <input className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                      placeholder="Search skill or tutor name..." value={search} onChange={e => setSearch(e.target.value)} />
+                      placeholder="Skill or tutor name" value={search} onChange={e => setSearch(e.target.value)} />
                     {filteredSkillSuggestions.length > 0 && (
                       <div className="absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-2xl shadow-sm z-10 overflow-hidden">
                         {filteredSkillSuggestions.map((suggestion, index) => (
@@ -691,18 +693,27 @@ export default function SkillBrowsePage() {
                     )}
                   </div>
                 </div>
-                <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                  value={level} onChange={e => setLevel(e.target.value)}>
-                  {LEVELS.map(l => <option key={l}>{l}</option>)}
-                </select>
-                <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                  value={type} onChange={e => setType(e.target.value)}>
-                  {TYPES.map(t => <option key={t}>{t}</option>)}
-                </select>
-                <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                  value={sortBy} onChange={e => setSortBy(e.target.value)}>
-                  {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Level</label>
+                  <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    value={level} onChange={e => setLevel(e.target.value)}>
+                    {LEVELS.map(l => <option key={l}>{l}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Type</label>
+                  <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    value={type} onChange={e => setType(e.target.value)}>
+                    {TYPES.map(t => <option key={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Sort</label>
+                  <select className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                    {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </div>
               </div>
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <label className="flex items-center gap-2 cursor-pointer w-fit">
@@ -714,7 +725,7 @@ export default function SkillBrowsePage() {
                   {(search || level !== 'All' || type !== 'All' || !verifiedOnly || sortBy !== 'match') && (
                     <button onClick={() => { setSearch(''); setLevel('All'); setType('All'); setVerifiedOnly(true); setSortBy('match'); }}
                       className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors mr-2">
-                      Clear filters
+                      Reset filters
                     </button>
                   )}
                 </div>
@@ -734,8 +745,8 @@ export default function SkillBrowsePage() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-20 text-slate-400">
                 <div className="text-4xl mb-3">🔍</div>
-                <p className="text-sm font-medium">No skills match your filters</p>
-                <p className="text-xs mt-1">Try adjusting the search or filters above</p>
+                <p className="text-sm font-medium">No skills matched your filters.</p>
+                <p className="text-xs mt-1">Try a broader keyword or reset the filters above.</p>
               </div>
             ) : (
               <>
@@ -766,7 +777,7 @@ export default function SkillBrowsePage() {
             <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5 mb-6">
               <div className="grid sm:grid-cols-3 gap-3 mb-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Search Skill</label>
+                  <label className="block text-xs font-medium text-slate-500 mb-1.5">Skill or keyword</label>
                   <input className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     placeholder="e.g. React, Calculus" value={tutorSearch} onChange={e => setTutorSearch(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && loadTutors()} />
@@ -796,7 +807,7 @@ export default function SkillBrowsePage() {
                 {(tutorSearch || tutorLevel || tutorVerified) && (
                   <button onClick={clearDiscoverFilters}
                     className="border border-slate-200 bg-white text-slate-700 text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                    Clear filters
+                    Reset filters
                   </button>
                 )}
                 {filteredTutors.length > 1 && !tutorsLoading && (
@@ -869,7 +880,8 @@ export default function SkillBrowsePage() {
             ) : filteredTutors.length === 0 ? (
               <div className="text-center py-16 text-slate-400">
                 <div className="text-4xl mb-3">🎓</div>
-                <p className="text-sm">No tutors found. Try adjusting your filters.</p>
+                <p className="text-sm">No tutors matched your current filters.</p>
+                <p className="text-xs mt-1">Try another skill keyword, level, or verification option.</p>
               </div>
             ) : (
               <div className="grid lg:grid-cols-4 gap-6">
@@ -992,7 +1004,7 @@ export default function SkillBrowsePage() {
                   ))}
                 {(reqTab === 'received' ? received : sent).length === 0 && (
                   <div className="text-center py-10 text-slate-400 bg-white border border-slate-100 rounded-2xl">
-                    <p className="text-sm">{reqTab === 'received' ? 'No one has sent you a request yet' : "You haven't sent any requests yet"}</p>
+                    <p className="text-sm">{reqTab === 'received' ? 'No one has sent you a request yet.' : 'You have not sent any requests yet.'}</p>
                   </div>
                 )}
                 {(reqTab === 'received' ? received : sent).length > 0 && (reqTab === 'received' ? received : sent).filter(r => {
@@ -1008,7 +1020,7 @@ export default function SkillBrowsePage() {
                     return r.status === reqStatusFilter && !isCancelled && !isExpired;
                 }).length === 0 && (
                     <div className="text-center py-10 text-slate-400 bg-white border border-slate-100 rounded-2xl">
-                      <p className="text-sm">No {reqStatusFilter.toLowerCase()} requests found</p>
+                      <p className="text-sm">No {reqStatusFilter.toLowerCase()} requests found for this tab.</p>
                     </div>
                   )}
               </div>

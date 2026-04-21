@@ -61,9 +61,10 @@ function RequestCard({ request, currentUserId, onUpdate, updating, onWithdraw, w
       </div>
 
       {request.message && (
-        <p className="text-sm text-slate-600 bg-slate-50 rounded-xl px-4 py-3 mb-4 leading-relaxed border border-slate-100">
-          "{request.message}"
-        </p>
+        <div className="bg-slate-50 rounded-xl px-4 py-3 mb-4 border border-slate-100">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Message</p>
+          <p className="text-sm text-slate-600 leading-relaxed break-words">{request.message}</p>
+        </div>
       )}
 
       {isReceived && isPending && !isWithdrawn && !hasExpired && (
@@ -157,7 +158,7 @@ export default function RequestsPage() {
       const { data } = await api.get('/requests/my');
       setRequests(data.requests);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load requests');
+      setError(err.response?.data?.message || 'Unable to load requests right now. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -182,11 +183,11 @@ export default function RequestsPage() {
             : r
         )
       );
-      setToast(`Request ${status.toLowerCase()} successfully`);
+      setToast(`Request ${status.toLowerCase()} successfully.`);
       setTimeout(() => setToast(''), 4000);
       load(); // Sync with server in background
     } catch (err) {
-      setError(err.response?.data?.message || 'Update failed');
+      setError(err.response?.data?.message || 'Unable to update the request. Please try again.');
       setTimeout(() => setError(''), 4000);
     } finally {
       setUpdating(null);
@@ -205,11 +206,11 @@ export default function RequestsPage() {
             : r
         )
       );
-      setToast('Request withdrawn successfully');
+      setToast('Request withdrawn successfully.');
       setTimeout(() => setToast(''), 4000);
       load(); // Sync with server in background
     } catch (err) {
-      setError(err.response?.data?.message || 'Withdrawal failed');
+      setError(err.response?.data?.message || 'Unable to withdraw the request. Please try again.');
       setTimeout(() => setError(''), 4000);
     } finally {
       setWithdrawing(null);
@@ -229,11 +230,11 @@ export default function RequestsPage() {
             : r
         )
       );
-      setToast(`${status} status undone successfully`);
+      setToast(`${status} status was undone successfully.`);
       setTimeout(() => setToast(''), 4000);
       load(); // Sync with server in background
     } catch (err) {
-      setError(err.response?.data?.message || 'Undo failed');
+      setError(err.response?.data?.message || 'Unable to undo this action. Please try again.');
       setTimeout(() => setError(''), 4000);
     } finally {
       setWithdrawing(null);
@@ -309,7 +310,7 @@ export default function RequestsPage() {
             onWithdraw={withdrawRequest}
             withdrawing={withdrawing}
             onCancel={cancelRequest}
-            emptyMsg="No one has sent you a request yet" 
+            emptyMsg="No one has sent you a request yet." 
           />
         ) : (
           <Section 
@@ -322,7 +323,7 @@ export default function RequestsPage() {
             onWithdraw={withdrawRequest}
             withdrawing={withdrawing}
             onCancel={cancelRequest}
-            emptyMsg="You haven't sent any requests yet" 
+            emptyMsg="You have not sent any requests yet." 
           />
         )}
       </div>
