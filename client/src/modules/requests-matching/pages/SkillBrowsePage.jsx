@@ -799,10 +799,11 @@ export default function SkillBrowsePage() {
                   </select>
                 </div>
               </div>
+              {/* Keep discover actions concise and easy to scan. */}
               <div className="flex flex-wrap gap-3 items-center">
                 <button onClick={loadTutors} disabled={tutorsLoading}
                   className="bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50">
-                  {tutorsLoading ? 'Searching...' : 'Search'}
+                  {tutorsLoading ? 'Searching...' : 'Search Tutors'}
                 </button>
                 {(tutorSearch || tutorLevel || tutorVerified) && (
                   <button onClick={clearDiscoverFilters}
@@ -831,7 +832,7 @@ export default function SkillBrowsePage() {
             {!tutorsLoading && topRecommendedTutors.length > 0 && (
               <div className="mb-6 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
                 <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
-                  <h3 className="text-sm font-bold text-slate-800">Auto-suggested best 5 matches</h3>
+                  <h3 className="text-sm font-bold text-slate-800">Auto-Suggested Best 5 Matches</h3>
                   <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-500">
                     Ranked by match score
                   </span>
@@ -1020,7 +1021,7 @@ export default function SkillBrowsePage() {
                     return r.status === reqStatusFilter && !isCancelled && !isExpired;
                 }).length === 0 && (
                     <div className="text-center py-10 text-slate-400 bg-white border border-slate-100 rounded-2xl">
-                      <p className="text-sm">No {reqStatusFilter.toLowerCase()} requests found for this tab.</p>
+                      <p className="text-sm">No {reqStatusFilter.toLowerCase()} requests match the selected filter.</p>
                     </div>
                   )}
               </div>
